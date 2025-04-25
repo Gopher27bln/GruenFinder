@@ -662,12 +662,28 @@ const DataService = (() => {
         // Add BBQ areas
         const bbqAreas = [
             {
-                id: 101,
-                name: 'Grillfläche Tiergarten',
+                id: 201,
+                name: 'Volkspark Friedrichshain Grillzone',
                 type: 'bbq_area',
                 geometry: {
                     type: 'Point',
-                    coordinates: [13.3565, 52.5165]
+                    coordinates: [13.4317, 52.5285]
+                },
+                properties: {
+                    size_ha: 0.3,
+                    facilities: ['bbq'],
+                    accessibility: ['wheelchair', 'public_transport'],
+                    opening_hours: '8:00 - 22:00 (April - September)',
+                    description: 'Offizielle Grillfläche im Volkspark Friedrichshain'
+                }
+            },
+            {
+                id: 202,
+                name: 'Tiergarten Grillzone',
+                type: 'bbq_area',
+                geometry: {
+                    type: 'Point',
+                    coordinates: [13.3777, 52.5159]
                 },
                 properties: {
                     size_ha: 0.5,
@@ -678,24 +694,8 @@ const DataService = (() => {
                 }
             },
             {
-                id: 102,
-                name: 'Grillfläche Volkspark Friedrichshain',
-                type: 'bbq_area',
-                geometry: {
-                    type: 'Point',
-                    coordinates: [13.4345, 52.5295]
-                },
-                properties: {
-                    size_ha: 0.3,
-                    facilities: ['bbq'],
-                    accessibility: ['public_transport'],
-                    opening_hours: '8:00 - 22:00 (April - September)',
-                    description: 'Offizielle Grillfläche im Volkspark Friedrichshain'
-                }
-            },
-            {
-                id: 103,
-                name: 'Grillfläche Tempelhofer Feld',
+                id: 203,
+                name: 'Tempelhofer Feld Grillzone',
                 type: 'bbq_area',
                 geometry: {
                     type: 'Point',
@@ -719,9 +719,31 @@ const DataService = (() => {
      */
     const getWeather = async (lat, lng) => {
         try {
-            // In a production app, this would fetch from a weather API
-            // For demo purposes, we'll use fallback data
-            return getBerlinWeatherFallback();
+            // Check if API key is available
+            if (!CONFIG.api.openWeatherMapKey) {
+                console.warn('OpenWeatherMap API key is missing. Using fallback weather data.');
+                return getBerlinWeatherFallback();
+            }
+            
+            // Use OpenWeatherMap API to get current weather
+            const url = `${CONFIG.api.openWeatherMap}?lat=${lat}&lon=${lng}&units=metric&appid=${CONFIG.api.openWeatherMapKey}`;
+            
+            const response = await fetch(url);
+            
+            if (!response.ok) {
+                console.error('Error fetching weather data:', response.statusText);
+                return getBerlinWeatherFallback();
+            }
+            
+            const data = await response.json();
+            
+            return {
+                temp: Math.round(data.main.temp),
+                condition: data.weather[0].main,
+                icon: getWeatherIcon(data.weather[0].id),
+                windSpeed: data.wind.speed,
+                windIcon: getWindIcon(data.wind.speed)
+            };
         } catch (error) {
             console.error('Error fetching weather:', error);
             return getBerlinWeatherFallback();
@@ -730,7 +752,6 @@ const DataService = (() => {
     
     /**
      * Get fallback weather data for Berlin
-     * This provides more accurate data when the API is unavailable
      */
     const getBerlinWeatherFallback = () => {
         // Get current date to determine season-appropriate weather
@@ -739,13 +760,76 @@ const DataService = (() => {
         
         // Seasonal weather patterns for Berlin
         if (month >= 5 && month <= 8) { // Summer (Jun-Sep)
-            return { temp: 24, condition: 'sunny', wind: 8 };
+            return { 
+                temp: 24, 
+                condition: 'Sonnig', 
+                icon: 'fa-sun',
+                windSpeed: 8,
+                windIcon: 'fa-wind'
+            };
         } else if (month >= 9 && month <= 10) { // Fall (Oct-Nov)
-            return { temp: 12, condition: 'partly_cloudy', wind: 12 };
+            return { 
+                temp: 12, 
+                condition: 'Teilweise bewölkt', 
+                icon: 'fa-cloud-sun',
+                windSpeed: 12,
+                windIcon: 'fa-wind'
+            };
         } else if (month >= 11 || month <= 1) { // Winter (Dec-Feb)
-            return { temp: 2, condition: 'cloudy', wind: 15 };
+            return { 
+                temp: 2, 
+                condition: 'Bewölkt', 
+                icon: 'fa-cloud',
+                windSpeed: 15,
+                windIcon: 'fa-wind'
+            };
         } else { // Spring (Mar-May)
-            return { temp: 16, condition: 'partly_cloudy', wind: 10 };
+            return { 
+                temp: 16, 
+                condition: 'Teilweise bewölkt', 
+                icon: 'fa-cloud-sun',
+                windSpeed: 10,
+                windIcon: 'fa-wind'
+            };
+        }
+    };
+    
+    /**
+     * Get appropriate weather icon based on weather condition ID
+     */
+    const getWeatherIcon = (conditionId) => {
+        // Map OpenWeatherMap condition codes to Font Awesome icons
+        // See https://openweathermap.org/weather-conditions for codes
+        if (conditionId >= 200 && conditionId < 300) { // Thunderstorm
+            return 'fa-bolt';
+        } else if (conditionId >= 300 && conditionId < 400) { // Drizzle
+            return 'fa-cloud-rain';
+        } else if (conditionId >= 500 && conditionId < 600) { // Rain
+            return 'fa-cloud-showers-heavy';
+        } else if (conditionId >= 600 && conditionId < 700) { // Snow
+            return 'fa-snowflake';
+        } else if (conditionId >= 700 && conditionId < 800) { // Atmosphere (fog, mist, etc.)
+            return 'fa-smog';
+        } else if (conditionId === 800) { // Clear
+            return 'fa-sun';
+        } else if (conditionId > 800 && conditionId < 900) { // Clouds
+            return 'fa-cloud';
+        } else { // Default
+            return 'fa-cloud-sun';
+        }
+    };
+    
+    /**
+     * Get appropriate wind icon based on wind speed
+     */
+    const getWindIcon = (windSpeed) => {
+        // Simple wind icon based on speed
+        if (windSpeed < 5) {
+            return 'fa-wind'; // Light breeze
+        } else if (windSpeed < 10) {
+            return 'fa-wind'; // Moderate wind
+        } else {
+            return 'fa-wind'; // Strong wind
         }
     };
     

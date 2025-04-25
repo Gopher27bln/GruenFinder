@@ -24,7 +24,7 @@ const CONFIG = {
         berlinHundefreilauf: 'https://gdi.berlin.de/services/wms/hundefreilauf',
         berlinHundefreilaufCapabilities: 'https://gdi.berlin.de/services/wms/hundefreilauf?REQUEST=GetCapabilities&SERVICE=wms',
         openWeatherMap: 'https://api.openweathermap.org/data/2.5/weather',
-        openWeatherMapKey: '7d0923feb02eb3ca265b4dc2437b9040' // Working OpenWeatherMap API key
+        openWeatherMapKey: '' // API key will be loaded from config.local.js
     },
     
     // Green space types and their colors
