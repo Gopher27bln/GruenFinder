@@ -139,14 +139,23 @@ const UIService = (() => {
         updateFacilityFilters();
         updateAccessibilityFilters();
         
-        // Apply filters to data
-        const filteredSpaces = DataService.filterGreenSpaces(activeFilters);
-        
-        // Update map with filtered spaces
-        MapService.renderGreenSpaces(filteredSpaces);
-        
-        // Show notification with count
-        showNotification(`Found ${filteredSpaces.length} green spaces matching your criteria.`, 'info');
+        // Apply filters to data (async operation)
+        DataService.filterGreenSpaces(activeFilters).then(filteredSpaces => {
+            // Update map with filtered spaces
+            MapService.renderGreenSpaces(filteredSpaces);
+            
+            // Show notification with count
+            if (activeFilters.searchTerm && activeFilters.searchTerm.trim() !== '') {
+                const location = DataService.getLastSearchedLocation();
+                if (location) {
+                    showNotification(`${filteredSpaces.length} Grünflächen in der Nähe von ${activeFilters.searchTerm} gefunden, sortiert nach Entfernung.`, 'info');
+                } else {
+                    showNotification(`Adresse "${activeFilters.searchTerm}" nicht gefunden. Zeige ${filteredSpaces.length} Grünflächen mit anderen Filtern an.`, 'warning');
+                }
+            } else {
+                showNotification(`${filteredSpaces.length} Grünflächen gefunden, die deinen Kriterien entsprechen.`, 'info');
+            }
+        });
     };
     
     /**
@@ -174,12 +183,15 @@ const UIService = (() => {
             accessibility: []
         };
         
+        // Reset the last searched location
+        DataService.resetSearchedLocation();
+        
         // Apply reset filters
         const allGreenSpaces = DataService.getAllGreenSpaces();
         MapService.renderGreenSpaces(allGreenSpaces);
         
         // Show notification
-        showNotification('Filters have been reset.', 'info');
+        showNotification('Filter wurden zurückgesetzt.', 'info');
     };
     
     /**
@@ -202,13 +214,13 @@ const UIService = (() => {
                 showGreenSpaceDetails(nearest.id);
                 
                 // Show notification
-                showNotification(`Found nearest green space: ${nearest.name} (${nearest.travelTime})`, 'success');
+                showNotification(`Nächste Grünfläche gefunden: ${nearest.name} (${nearest.travelTime})`, 'success');
             } else {
-                showNotification('Could not find any green spaces.', 'error');
+                showNotification('Es konnten keine Grünflächen gefunden werden.', 'error');
             }
         } catch (error) {
-            console.error('Error finding nearest green space:', error);
-            showNotification('Error finding nearest green space. Please try again.', 'error');
+            console.error('Fehler beim Finden der nächsten Grünfläche:', error);
+            showNotification('Fehler beim Finden der nächsten Grünfläche. Bitte versuche es erneut.', 'error');
         }
     };
     
@@ -229,7 +241,7 @@ const UIService = (() => {
         // Fill in the details
         content.querySelector('.detail-title').textContent = greenSpace.name;
         content.querySelector('.detail-type').textContent = CONFIG.greenSpaceTypes[greenSpace.type].name;
-        content.querySelector('.detail-size span').textContent = `${greenSpace.properties.size_ha} hectares`;
+        content.querySelector('.detail-size span').textContent = `${greenSpace.properties.size_ha} Hektar`;
         
         // Get weather information
         try {
@@ -239,9 +251,20 @@ const UIService = (() => {
             
             content.querySelector('.detail-weather i').className = `fas ${weather.icon}`;
             content.querySelector('.detail-weather span').textContent = `${weather.temp}°C, ${weather.condition}`;
+            
+            // Display wind speed information
+            console.log('Weather data:', weather);
+            try {
+                content.querySelector('.detail-wind i').className = `fas ${weather.windIcon}`;
+                content.querySelector('.detail-wind span').textContent = `${weather.windSpeed} m/s`;
+                console.log('Wind speed element updated');
+            } catch (windError) {
+                console.error('Error updating wind display:', windError);
+            }
         } catch (error) {
             console.error('Error fetching weather:', error);
             content.querySelector('.detail-weather').style.display = 'none';
+            content.querySelector('.detail-wind').style.display = 'none';
         }
         
         // Calculate distance and travel time if user location is available
@@ -260,12 +283,48 @@ const UIService = (() => {
             const walkingTime = DataService.calculateTravelTime(distance, 'walking');
             content.querySelector('.detail-distance span').textContent = walkingTime;
             
-            // Set up route button
+            // Set up route button with direct href link for better compatibility
             const routeBtn = content.querySelector('.route-btn');
-            routeBtn.addEventListener('click', () => {
-                const url = `https://www.google.com/maps/dir/?api=1&origin=${userLocation.lat},${userLocation.lng}&destination=${spaceLat},${spaceLng}&travelmode=walking`;
-                window.open(url, '_blank');
+            
+            // Create Google Maps URL with the destination
+            const googleMapsUrl = `https://www.google.com/maps/dir/?api=1&destination=${spaceLat},${spaceLng}`;
+            
+            // Make the button act like a link
+            routeBtn.setAttribute('data-maps-url', googleMapsUrl);
+            
+            // Remove any existing event listeners by cloning and replacing the button
+            const newRouteBtn = routeBtn.cloneNode(true);
+            routeBtn.parentNode.replaceChild(newRouteBtn, routeBtn);
+            
+            // Add the event listener to the new button
+            newRouteBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                
+                const url = this.getAttribute('data-maps-url');
+                console.log('Opening Google Maps with URL:', url);
+                
+                // Try multiple methods to open the URL
+                try {
+                    // Method 1: Direct window.open
+                    window.open(url, '_blank');
+                } catch (err) {
+                    console.warn('First method failed, trying alternative...', err);
+                    
+                    // Method 2: Create and click a link
+                    const link = document.createElement('a');
+                    link.href = url;
+                    link.target = '_blank';
+                    link.rel = 'noopener noreferrer';
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                }
             });
+            
+            // Also make it work as a regular link for better accessibility
+            newRouteBtn.style.cursor = 'pointer';
+            newRouteBtn.title = 'Route in Google Maps öffnen';
         } else {
             content.querySelector('.detail-distance').style.display = 'none';
         }
@@ -281,7 +340,7 @@ const UIService = (() => {
             });
         } else {
             const li = document.createElement('li');
-            li.textContent = 'No information available';
+            li.textContent = 'Keine Informationen verfügbar';
             facilitiesList.appendChild(li);
         }
         
@@ -296,17 +355,29 @@ const UIService = (() => {
             });
         } else {
             const li = document.createElement('li');
-            li.textContent = 'No information available';
+            li.textContent = 'Keine Informationen verfügbar';
             accessibilityList.appendChild(li);
         }
         
         // Add opening hours
         const hoursText = content.querySelector('.hours-text');
-        hoursText.textContent = greenSpace.properties.opening_hours || 'No information available';
+        hoursText.textContent = greenSpace.properties.opening_hours || 'Keine Informationen verfügbar';
         
         // Clear previous content and add new content
         detailContent.innerHTML = '';
         detailContent.appendChild(content);
+        
+        // Double-check that the wind element is properly displayed after DOM insertion
+        setTimeout(() => {
+            const windElement = detailPanel.querySelector('.detail-wind');
+            if (windElement) {
+                console.log('Wind element found in DOM after insertion');
+                // Ensure it's visible
+                windElement.style.display = 'flex';
+            } else {
+                console.error('Wind element not found in DOM after insertion');
+            }
+        }, 100);
         
         // Show the panel
         detailPanel.classList.remove('hidden');

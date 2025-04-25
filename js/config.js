@@ -10,15 +10,21 @@ const CONFIG = {
         zoom: 11,
         minZoom: 9,
         maxZoom: 18,
-        style: 'https://api.maptiler.com/maps/streets/style.json?key=get_your_own_key', // Replace with your MapTiler key or use another style URL
-        alternativeStyle: 'https://tiles.stadiamaps.com/styles/alidade_smooth.json' // Free alternative
+        mapboxAccessToken: 'pk.eyJ1IjoiZ29waGVyMjciLCJhIjoiY205Y2lxdHU0MDNsYjJxczV0OWd3ZHRuMyJ9.Z_tnP1WQ06Py0QHgqRwf7A', // Replace with your actual Mapbox access token
+        style: 'mapbox://styles/mapbox/streets-v12', // Mapbox Streets style
+        satelliteStyle: 'mapbox://styles/mapbox/satellite-streets-v12', // Satellite style with streets
+        outdoorsStyle: 'mapbox://styles/mapbox/outdoors-v12' // Outdoors style for nature areas
     },
     
     // API endpoints
     api: {
         berlinOpenData: 'https://daten.berlin.de/api/3/action/datastore_search',
+        berlinGrillflaechen: 'https://gdi.berlin.de/services/wms/grillflaechen',
+        berlinGrillflaechenCapabilities: 'https://gdi.berlin.de/services/wms/grillflaechen?REQUEST=GetCapabilities&SERVICE=wms',
+        berlinHundefreilauf: 'https://gdi.berlin.de/services/wms/hundefreilauf',
+        berlinHundefreilaufCapabilities: 'https://gdi.berlin.de/services/wms/hundefreilauf?REQUEST=GetCapabilities&SERVICE=wms',
         openWeatherMap: 'https://api.openweathermap.org/data/2.5/weather',
-        openWeatherMapKey: '' // Add your OpenWeatherMap API key here
+        openWeatherMapKey: '7d0923feb02eb3ca265b4dc2437b9040' // Working OpenWeatherMap API key
     },
     
     // Green space types and their colors
@@ -28,36 +34,40 @@ const CONFIG = {
             color: '#7CB342'
         },
         garden: {
-            name: 'Garden',
+            name: 'Garten',
             color: '#8BC34A'
         },
         forest: {
-            name: 'Forest',
+            name: 'Wald',
             color: '#33691E'
         },
         playground: {
-            name: 'Playground',
+            name: 'Spielplatz',
             color: '#FFCA28'
         },
         cemetery: {
-            name: 'Cemetery',
+            name: 'Friedhof',
             color: '#78909C'
         },
         meadow: {
-            name: 'Meadow',
+            name: 'Wiese',
             color: '#AED581'
         },
+        bbq_area: {
+            name: 'Grillfläche',
+            color: '#FF5722'
+        },
         other: {
-            name: 'Other Green Space',
+            name: 'Andere Grünfläche',
             color: '#A5D6A7'
         }
     },
     
     // Size categories in hectares
     sizeCategories: {
-        small: { min: 0, max: 1, name: 'Small' },
-        medium: { min: 1, max: 10, name: 'Medium' },
-        large: { min: 10, max: Infinity, name: 'Large' }
+        small: { min: 0, max: 1, name: 'Klein' },
+        medium: { min: 1, max: 10, name: 'Mittel' },
+        large: { min: 10, max: Infinity, name: 'Groß' }
     },
     
     // Facility icons

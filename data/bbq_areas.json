@@ -1,0 +1,194 @@
+[
+  {
+    "id": 101,
+    "name": "Grillplatz Volkspark Friedrichshain",
+    "type": "bbq_area",
+    "geometry": {
+      "type": "Polygon",
+      "coordinates": [
+        [
+          [13.4345, 52.5285],
+          [13.4345, 52.5295],
+          [13.4355, 52.5295],
+          [13.4355, 52.5285],
+          [13.4345, 52.5285]
+        ]
+      ]
+    },
+    "properties": {
+      "size_ha": 0.5,
+      "facilities": ["bbq", "toilet", "water"],
+      "accessibility": ["public_transport"],
+      "opening_hours": "8:00 - 22:00 (April - September)",
+      "description": "Offizieller Grillplatz im Volkspark Friedrichshain"
+    }
+  },
+  {
+    "id": 102,
+    "name": "Grillplatz Tiergarten",
+    "type": "bbq_area",
+    "geometry": {
+      "type": "Polygon",
+      "coordinates": [
+        [
+          [13.3565, 52.5165],
+          [13.3565, 52.5175],
+          [13.3575, 52.5175],
+          [13.3575, 52.5165],
+          [13.3565, 52.5165]
+        ]
+      ]
+    },
+    "properties": {
+      "size_ha": 0.8,
+      "facilities": ["bbq", "toilet", "water", "playground"],
+      "accessibility": ["wheelchair", "public_transport"],
+      "opening_hours": "8:00 - 22:00 (April - September)",
+      "description": "Großer Grillplatz im Tiergarten mit guter Infrastruktur"
+    }
+  },
+  {
+    "id": 103,
+    "name": "Grillplatz Tempelhofer Feld",
+    "type": "bbq_area",
+    "geometry": {
+      "type": "Polygon",
+      "coordinates": [
+        [
+          [13.4025, 52.4735],
+          [13.4025, 52.4745],
+          [13.4035, 52.4745],
+          [13.4035, 52.4735],
+          [13.4025, 52.4735]
+        ]
+      ]
+    },
+    "properties": {
+      "size_ha": 1.2,
+      "facilities": ["bbq", "toilet", "water", "sports"],
+      "accessibility": ["wheelchair", "parking", "public_transport"],
+      "opening_hours": "8:00 - 22:00 (April - September)",
+      "description": "Weitläufiger Grillbereich auf dem ehemaligen Flughafengelände"
+    }
+  },
+  {
+    "id": 104,
+    "name": "Grillplatz Mauerpark",
+    "type": "bbq_area",
+    "geometry": {
+      "type": "Polygon",
+      "coordinates": [
+        [
+          [13.4035, 52.5425],
+          [13.4035, 52.5435],
+          [13.4045, 52.5435],
+          [13.4045, 52.5425],
+          [13.4035, 52.5425]
+        ]
+      ]
+    },
+    "properties": {
+      "size_ha": 0.3,
+      "facilities": ["bbq"],
+      "accessibility": ["public_transport"],
+      "opening_hours": "8:00 - 22:00 (April - September)",
+      "description": "Beliebter Grillplatz im Mauerpark, besonders am Wochenende stark frequentiert"
+    }
+  },
+  {
+    "id": 105,
+    "name": "Grillplatz Hasenheide",
+    "type": "bbq_area",
+    "geometry": {
+      "type": "Polygon",
+      "coordinates": [
+        [
+          [13.4175, 52.4865],
+          [13.4175, 52.4875],
+          [13.4185, 52.4875],
+          [13.4185, 52.4865],
+          [13.4175, 52.4865]
+        ]
+      ]
+    },
+    "properties": {
+      "size_ha": 0.4,
+      "facilities": ["bbq", "playground"],
+      "accessibility": ["public_transport"],
+      "opening_hours": "8:00 - 22:00 (April - September)",
+      "description": "Grillbereich in der Hasenheide in Neukölln"
+    }
+  },
+  {
+    "id": 106,
+    "name": "Grillplatz Rehberge",
+    "type": "bbq_area",
+    "geometry": {
+      "type": "Polygon",
+      "coordinates": [
+        [
+          [13.3415, 52.5485],
+          [13.3415, 52.5495],
+          [13.3425, 52.5495],
+          [13.3425, 52.5485],
+          [13.3415, 52.5485]
+        ]
+      ]
+    },
+    "properties": {
+      "size_ha": 0.6,
+      "facilities": ["bbq", "water", "sports"],
+      "accessibility": ["public_transport", "parking"],
+      "opening_hours": "8:00 - 22:00 (April - September)",
+      "description": "Grillplatz im Volkspark Rehberge im Wedding"
+    }
+  },
+  {
+    "id": 107,
+    "name": "Grillplatz Jungfernheide",
+    "type": "bbq_area",
+    "geometry": {
+      "type": "Polygon",
+      "coordinates": [
+        [
+          [13.2915, 52.5325],
+          [13.2915, 52.5335],
+          [13.2925, 52.5335],
+          [13.2925, 52.5325],
+          [13.2915, 52.5325]
+        ]
+      ]
+    },
+    "properties": {
+      "size_ha": 0.7,
+      "facilities": ["bbq", "water", "playground"],
+      "accessibility": ["public_transport", "parking"],
+      "opening_hours": "8:00 - 22:00 (April - September)",
+      "description": "Grillbereich im Volkspark Jungfernheide"
+    }
+  },
+  {
+    "id": 108,
+    "name": "Grillplatz Plänterwald",
+    "type": "bbq_area",
+    "geometry": {
+      "type": "Polygon",
+      "coordinates": [
+        [
+          [13.4915, 52.4825],
+          [13.4915, 52.4835],
+          [13.4925, 52.4835],
+          [13.4925, 52.4825],
+          [13.4915, 52.4825]
+        ]
+      ]
+    },
+    "properties": {
+      "size_ha": 0.5,
+      "facilities": ["bbq", "water"],
+      "accessibility": ["public_transport"],
+      "opening_hours": "8:00 - 22:00 (April - September)",
+      "description": "Grillplatz im Plänterwald in Treptow"
+    }
+  }
+]

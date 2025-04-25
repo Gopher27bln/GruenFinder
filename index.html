@@ -1,13 +1,13 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="de">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GrünFinder - Discover Berlin's Green Spaces</title>
+    <title>GrünFinder - Entdecke Berlins Grünflächen</title>
     <link rel="stylesheet" href="css/styles.css">
-    <!-- MapLibre GL JS -->
-    <link href="https://unpkg.com/maplibre-gl@3.6.2/dist/maplibre-gl.css" rel="stylesheet" />
-    <script src="https://unpkg.com/maplibre-gl@3.6.2/dist/maplibre-gl.js"></script>
+    <!-- Mapbox GL JS -->
+    <link href="https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.css" rel="stylesheet">
+    <script src="https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.js"></script>
     <!-- Font Awesome for icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 </head>
@@ -30,62 +30,62 @@
             <!-- Sidebar -->
             <aside id="sidebar" class="sidebar">
                 <div class="search-container">
-                    <h2>Find Green Spaces</h2>
+                    <h2>Grünflächen finden</h2>
                     <div class="search-box">
-                        <input type="text" id="search-input" placeholder="Search by name...">
+                        <input type="text" id="search-input" placeholder="Nach Adresse suchen...">
                         <button id="search-button">
                             <i class="fas fa-search"></i>
                         </button>
                     </div>
                     <button id="find-nearest" class="btn btn-primary">
-                        <i class="fas fa-location-arrow"></i> Find Nearest
+                        <i class="fas fa-location-arrow"></i> Nächste finden
                     </button>
                 </div>
 
                 <div class="filters-container">
-                    <h3>Filters</h3>
+                    <h3>Filter</h3>
                     <div class="filter-group">
-                        <label>Distance from location</label>
+                        <label>Entfernung vom Standort</label>
                         <select id="distance-filter">
-                            <option value="all">All distances</option>
-                            <option value="500">Within 500m</option>
-                            <option value="1000">Within 1km</option>
-                            <option value="2000">Within 2km</option>
-                            <option value="5000">Within 5km</option>
+                            <option value="all">Alle Entfernungen</option>
+                            <option value="500">Innerhalb 500m</option>
+                            <option value="1000">Innerhalb 1km</option>
+                            <option value="2000">Innerhalb 2km</option>
+                            <option value="5000">Innerhalb 5km</option>
                         </select>
                     </div>
 
                     <div class="filter-group">
-                        <label>Size</label>
+                        <label>Größe</label>
                         <div class="checkbox-group">
-                            <label><input type="checkbox" name="size" value="small"> Small</label>
-                            <label><input type="checkbox" name="size" value="medium"> Medium</label>
-                            <label><input type="checkbox" name="size" value="large"> Large</label>
+                            <label><input type="checkbox" name="size" value="small"> Klein</label>
+                            <label><input type="checkbox" name="size" value="medium"> Mittel</label>
+                            <label><input type="checkbox" name="size" value="large"> Groß</label>
                         </div>
                     </div>
 
                     <div class="filter-group">
-                        <label>Facilities</label>
+                        <label>Einrichtungen</label>
                         <div class="checkbox-group">
-                            <label><input type="checkbox" name="facility" value="playground"> Playground</label>
-                            <label><input type="checkbox" name="facility" value="bbq"> BBQ Area</label>
-                            <label><input type="checkbox" name="facility" value="water"> Water Features</label>
-                            <label><input type="checkbox" name="facility" value="sports"> Sports Facilities</label>
-                            <label><input type="checkbox" name="facility" value="dog"> Dog-friendly</label>
+                            <label><input type="checkbox" name="facility" value="playground"> Spielplatz</label>
+                            <label><input type="checkbox" name="facility" value="bbq"> Grillfläche</label>
+                            <label><input type="checkbox" name="facility" value="water"> Wasserflächen</label>
+                            <label><input type="checkbox" name="facility" value="sports"> Sportanlagen</label>
+                            <label><input type="checkbox" name="facility" value="dog"> Hundefreundlich</label>
                         </div>
                     </div>
 
                     <div class="filter-group">
-                        <label>Accessibility</label>
+                        <label>Barrierefreiheit</label>
                         <div class="checkbox-group">
-                            <label><input type="checkbox" name="accessibility" value="wheelchair"> Wheelchair Access</label>
-                            <label><input type="checkbox" name="accessibility" value="parking"> Parking Available</label>
-                            <label><input type="checkbox" name="accessibility" value="public_transport"> Public Transport</label>
+                            <label><input type="checkbox" name="accessibility" value="wheelchair"> Rollstuhlgerecht</label>
+                            <label><input type="checkbox" name="accessibility" value="parking"> Parkplätze vorhanden</label>
+                            <label><input type="checkbox" name="accessibility" value="public_transport"> ÖPNV-Anbindung</label>
                         </div>
                     </div>
 
-                    <button id="apply-filters" class="btn btn-secondary">Apply Filters</button>
-                    <button id="reset-filters" class="btn btn-outline">Reset</button>
+                    <button id="apply-filters" class="btn btn-secondary">Filter anwenden</button>
+                    <button id="reset-filters" class="btn btn-outline">Zurücksetzen</button>
                 </div>
             </aside>
 
@@ -104,8 +104,8 @@
         <!-- Footer -->
         <footer class="footer">
             <div class="attribution">
-                Data: <a href="https://daten.berlin.de" target="_blank">Berlin Open Data</a> | 
-                Map: <a href="https://www.openstreetmap.org" target="_blank">OpenStreetMap</a> | 
+                Daten: <a href="https://daten.berlin.de" target="_blank">Berlin Open Data</a> | 
+                Karte: <a href="https://www.openstreetmap.org" target="_blank">OpenStreetMap</a> | 
                 © 2025 GrünFinder
             </div>
         </footer>
@@ -126,32 +126,37 @@
                 <i class="fas fa-cloud-sun"></i>
                 <span></span>
             </div>
+            <div class="detail-wind">
+                <i class="fas fa-wind"></i>
+                <span></span>
+            </div>
             <div class="detail-distance">
                 <i class="fas fa-walking"></i>
                 <span></span>
             </div>
         </div>
         <div class="detail-facilities">
-            <h3>Facilities</h3>
+            <h3>Einrichtungen</h3>
             <ul class="facilities-list"></ul>
         </div>
         <div class="detail-accessibility">
-            <h3>Accessibility</h3>
+            <h3>Barrierefreiheit</h3>
             <ul class="accessibility-list"></ul>
         </div>
         <div class="detail-hours">
-            <h3>Opening Hours</h3>
+            <h3>Öffnungszeiten</h3>
             <p class="hours-text"></p>
         </div>
         <div class="detail-actions">
             <button class="btn btn-primary route-btn">
-                <i class="fas fa-directions"></i> Plan Route
+                <i class="fas fa-directions"></i> Route planen
             </button>
         </div>
     </template>
 
     <!-- Scripts -->
     <script src="js/config.js"></script>
+    <script src="js/icons.js"></script>
     <script src="js/data.js"></script>
     <script src="js/map.js"></script>
     <script src="js/ui.js"></script>

@@ -328,6 +328,19 @@ h1, h2, h3, h4 {
     color: var(--primary-color);
 }
 
+/* Specific styling for wind display */
+.detail-wind {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.detail-wind i {
+    font-size: 1.5rem;
+    color: var(--primary-color);
+}
+
 .detail-facilities, .detail-accessibility, .detail-hours {
     margin-bottom: 1.5rem;
 }
